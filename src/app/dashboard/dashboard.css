@@ -1,0 +1,108 @@
+/* src/app/dashboard/dashboard.css */
+
+.dashboard-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #fbc2eb 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.dashboard-main {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 32px rgba(37,99,235,0.08);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dashboard-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #2563eb, #ec4899, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 8px rgba(124,58,237,0.08);
+}
+
+.dashboard-section {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-project-item {
+  background: #dbeafe;
+  color: #1e293b;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  border: 2px solid transparent;
+}
+.dashboard-project-item.selected {
+  background: #2563eb;
+  color: #fff;
+  border-color: #7c3aed;
+}
+
+.dashboard-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.dashboard-input {
+  border: 2px solid #dbeafe;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  font-size: 1rem;
+  color: #334155;
+  flex: 1;
+  transition: border 0.2s;
+}
+.dashboard-input:focus {
+  border-color: #2563eb;
+}
+
+.dashboard-btn {
+  background: linear-gradient(90deg, #2563eb, #ec4899);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+}
+.dashboard-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #ec4899, #2563eb);
+}
+
+.dashboard-member-list {
+  list-style: disc inside;
+  margin: 0.5rem 0 0.5rem 1rem;
+  color: #334155;
+  font-size: 1rem;
+}

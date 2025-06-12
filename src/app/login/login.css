@@ -1,0 +1,132 @@
+/* src/app/login/login.css */
+
+.login-bg {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #dbeafe 0%, #fff 60%, #fbcfe8 100%);
+  padding: 2rem;
+}
+
+.login-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  max-width: 28rem;
+  width: 100%;
+}
+
+.login-icon {
+  background: #2563eb;
+  border-radius: 9999px;
+  padding: 0.75rem;
+  box-shadow: 4px 10px rgba(37,99,235,0.15);
+  margin-bottom: 0.5rem;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  to { transform: translateY(-10px); }
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #2563eb, #ec4899, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 8px rgba(124,58,237,0.08);
+}
+
+.login-desc {
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.login-form {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 6px 32px rgba(37,99,235,0.08);
+  padding: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid #dbeafe;
+  animation: fade-in 0.7s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.login-input {
+  border: 2px solid #dbeafe;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  transition: border 0.2s;
+  font-size: 1rem;
+  color: #334155;
+}
+.login-input:focus {
+  border-color: #2563eb;
+}
+
+.login-input[type="password"] {
+  border-color: #fbcfe8;
+}
+.login-input[type="password"]:focus {
+  border-color: #ec4899;
+}
+
+.login-btn {
+  background: linear-gradient(90deg, #2563eb, #ec4899);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+}
+.login-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #ec4899, #2563eb);
+}
+
+.login-success {
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.08);
+  animation: fade-in 0.7s ease;
+}
+
+.login-success p {
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
