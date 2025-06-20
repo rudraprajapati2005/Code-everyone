@@ -219,7 +219,12 @@ export default function Dashboard() {
                     "dashboard-project-item" +
                     (proj.id === selectedProject ? " selected" : "")
                   }
-                  onClick={() => setSelectedProject(proj.id)}
+                  onClick={() =>
+                    {
+                      const projectID= proj.id;
+                      router.push(`/dashboard/myProject/${projectID}`);
+                    }
+                  }
                 >
                   <span>{proj.name}</span>
                   <span>

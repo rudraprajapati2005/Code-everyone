@@ -1,0 +1,24 @@
+.task-list{
+    background-color: rgb(255, 255, 255);
+    width: 100% - calc(2rem * 2);
+    color : rgb(16, 9, 9);
+    margin : 2rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.task{
+    background-color: sandybrown;
+    color:white;
+    padding: 1rem;
+    font-family: Tahoma;
+    font-weight: 700;
+    margin : 1rem;
+    cursor: grab;
+  user-select: none;
+}
+
+
+.task:active {
+  cursor: grabbing;
+}
