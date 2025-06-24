@@ -1,36 +1,41 @@
-const tasks = document.querySelectorAll('.task');
-const taskList = document.getElementById('taskList');
+import { getDatabase, ref, set, get } from "firebase/database";
 
-let draggedItem = null;
-
-tasks.forEach(task => {
-  task.addEventListener('dragstart', (e) => {
-    draggedItem = task;
-    setTimeout(() => task.style.display = 'none', 0);
+// Function to add a new task
+export const addTask = async (userId, projectId, task, columnIndex, rowIndex) => {
+  const db = getDatabase();
+  const taskId = Date.now().toString();
+  await set(ref(db, `users/${userId}/projects/${projectId}/tasks/${taskId}`), {
+    id: taskId,
+    content: task,
+    column: columnIndex,
+    row: rowIndex,
+    createdAt: new Date().toISOString(),
   });
+  return taskId;
+};
 
-  task.addEventListener('dragend', () => {
-    setTimeout(() => {
-      draggedItem.style.display = 'block';
-      draggedItem = null;
-    }, 0);
-  });
+// Function to update task position
+export const updateTaskPosition = async (userId, projectId, taskId, columnIndex, rowIndex) => {
+  const db = getDatabase();
+  await set(ref(db, `users/${userId}/projects/${projectId}/tasks/${taskId}/column`), columnIndex);
+  await set(ref(db, `users/${userId}/projects/${projectId}/tasks/${taskId}/row`), rowIndex);
+};
 
-  task.addEventListener('dragover', (e) => e.preventDefault());
+// Function to edit task content
+export const editTask = async (userId, projectId, taskId, newContent) => {
+  const db = getDatabase();
+  await set(ref(db, `users/${userId}/projects/${projectId}/tasks/${taskId}/content`), newContent);
+};
 
-  task.addEventListener('dragenter', (e) => {
-    e.preventDefault();
-    task.style.borderTop = '2px solid #000';
-  });
+// Function to get all tasks
+export const getTasks = async (userId, projectId) => {
+  const db = getDatabase();
+  const snapshot = await get(ref(db, `users/${userId}/projects/${projectId}/tasks`));
+  return snapshot.exists() ? snapshot.val() : {};
+};
 
-  task.addEventListener('dragleave', () => {
-    task.style.borderTop = '';
-  });
-
-  task.addEventListener('drop', () => {
-    if (draggedItem !== task) {
-      taskList.insertBefore(draggedItem, task);
-    }
-    task.style.borderTop = '';
-  });
-});
+// Function to delete task
+export const deleteTask = async (userId, projectId, taskId) => {
+  const db = getDatabase();
+  await set(ref(db, `users/${userId}/projects/${projectId}/tasks/${taskId}`), null);
+};

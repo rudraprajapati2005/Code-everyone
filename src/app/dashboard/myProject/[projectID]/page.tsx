@@ -13,18 +13,58 @@ interface Project {
     members: string[];
 }
 
+interface Task {
+    id: string;
+    description: string;
+    status: "todo" | "in-progress" | "done";
+    row: number;
+    column: number;
+    rowSpan: number;
+    colSpan: number;
+}
+function drawTable(taskList: Task[]) {
+    return (
+        <table className="task-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {taskList.map((task) => (
+                    <tr  key={task.id}>
+                        <td className="task">{task.description}</td>
+                        
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    )
+}
+
 export default function MyProjectPage() {
+    const [tasks, setTasks] = useState<string[]>([]);
+    const [newTask, setNewTask] = useState("");
     const { projectID } = useParams();
     const [user, setUser] = useState<User | null>(null);
     const [project, setProject] = useState<Project | null>(null);
     const [selectedSection, setSelectedSection] = useState("home");
     const [dark, setDark] = useState(false);
     const router = useRouter();
-    
     // Initialize Firebase auth with the app instance
     const auth = getAuth(app);
-
+    const [taskListdata,settaskListdata] = useState([
+        { id: "1", description: "Task 1", status: "todo", row: 1, column: 0, rowSpan: 1, colSpan: 1 },
+        { id: "2", description: "Task 2", status: "in-progress", row: 2, column: 1, rowSpan: 1, colSpan: 1 },
+        { id: "3", description: "Task 3", status: "done", row: 1, column: 1, rowSpan: 1, colSpan: 1 },
+        { id: "4", description: "Task 4", status: "todo", row: 3, column: 1, rowSpan: 1, colSpan: 1 }
+    ]);
+    const [num_rows, setNumRows] = useState(0);
+    const [num_cols, setNumCols] = useState(0);
     // Theme effect
+
+    
     useEffect(() => {
         if (dark) {
             document.body.classList.add("dark");
@@ -32,162 +72,84 @@ export default function MyProjectPage() {
             document.body.classList.remove("dark");
         }
     }, [dark]);
-
-    // Add drag and drop functionality
     useEffect(() => {
-        let draggedItem: HTMLElement | null = null;
-        const tasks = document.querySelectorAll('.task');
-        const taskList = document.getElementById('taskList');
-
-        tasks.forEach(task => {
-            task.setAttribute('draggable', 'true');  // Make tasks draggable
-            
-            task.addEventListener('dragstart', () => {
-                draggedItem = task as HTMLElement;
-                setTimeout(() => {
-                    if (draggedItem) draggedItem.style.display = 'none';
-                }, 0);
-            });
-
-            task.addEventListener('dragend', () => {
-                setTimeout(() => {
-                    if (draggedItem) {
-                        draggedItem.style.display = 'block';
-                        draggedItem = null;
-                    }
-                }, 0);
-            });
-
-            task.addEventListener('dragover', (e) => e.preventDefault());
-
-            task.addEventListener('dragenter', (e) => {
-                e.preventDefault();
-                (task as HTMLElement).style.borderTop = '2px solid #000';
-            });
-
-            task.addEventListener('dragleave', () => {
-                (task as HTMLElement).style.borderTop = '';
-            });
-
-            task.addEventListener('drop', () => {
-                if (draggedItem && draggedItem !== task && taskList) {
-                    taskList.insertBefore(draggedItem, task);
-                }
-                (task as HTMLElement).style.borderTop = '';
-            });
+        setTimeout(() => {
+        let row_divs = document.querySelectorAll('.new-row');
+       const newTaskRows : string[][]=[];
+       row_divs.forEach((row_div)=>{
+        const rowTasks: string[] = [];
+        row_div.querySelectorAll('.task').forEach((task) => {
+            const taskText = task.textContent?.trim() || '';
+            if(taskText){
+                rowTasks.push(taskText);
+            }
+            newTaskRows.push(rowTasks);
         });
-
-        // Cleanup function to remove event listeners
-        return () => {
-            tasks.forEach(task => {
-                task.removeAttribute('draggable');
-                task.replaceWith(task.cloneNode(true));
-            });
-        };
-    }, [project]); // Re-run when project changes
-
-    // Firebase auth effect
+        });
+    console.log("Number of rows : hell : ",newTaskRows.length);
+        }, 2000); // Delay to ensure DOM is ready
+    }, []);
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-            setUser(firebaseUser);
-            
-            if (firebaseUser && projectID) {
-                const db = getDatabase(app);
-                const projectRef = ref(db, `users/${firebaseUser.uid}/projects/${projectID}`);
-                
-                const unsubscribeProject = onValue(projectRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        setProject(data as Project);
-                    }
-                });
-
-                return () => unsubscribeProject();
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            if (!currentUser) {
+                router.push("/login");
             }
         });
 
         return () => unsubscribe();
-    }, [projectID, auth]);
+    }, [auth, router]);
 
-    if (!user) {
-        return <div className="dashboard-section">Please log in to view this project.</div>;
+    useEffect(() => {
+        if (user && projectID) {
+            // Load project details
+            const db = getDatabase();
+            const projectRef = ref(db, `users/${user.uid}/projects/${projectID}`);
+            
+            const unsubscribe = onValue(projectRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    setProject(snapshot.val());
+                }
+            });
+
+            return () => unsubscribe();
+        }
+    }, [user, projectID]);
+
+  function handleAddTask() {
+
+    const str = newTask.trim();
+    if (str === "") {
+        alert("Task cannot be empty");
+        return;
     }
-
-    if (!project) {
-        return <div className="dashboard-section">Loading project...</div>;
-    }
-
+    setNewTask("");
+    const newTasksList= tasks;
+    newTasksList.push(str);
+    setTasks(newTasksList);
+  }
     return (
-        <div>
-            <nav className="navbar">
-                <ul className="navbar-list">
-                    <li>
-                        <button
-                            className={"navbar-link" + (selectedSection === "home" ? " active" : "")}
-                            onClick={() => setSelectedSection("home")}
-                        >
-                            Home
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className={"navbar-link" + (selectedSection === "projects" ? " active" : "")}
-                            onClick={() => router.push("/dashboard")}
-                        >
-                            Projects
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className={"navbar-link" + (selectedSection === "requests" ? " active" : "")}
-                            onClick={() => setSelectedSection("requests")}
-                        >
-                            Requests
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className={"navbar-link" + (selectedSection === "profile" ? " active" : "")}
-                            onClick={() => setSelectedSection("profile")}
-                        >
-                            My Profile
-                        </button>
-                    </li>
-                    <li style={{ marginLeft: "auto" }}>
-                        <button
-                            className="theme-toggle"
-                            title={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                            onClick={() => setDark((d) => !d)}
-                        >
-                            {dark ? "🌙" : "☀️"}
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-            <main className="dashboard-main">
-                <div className="project-detail dashboard-section">
-                    <h1>{project.name}</h1>
-                    <p>Project ID: {projectID}</p>
-                    <h2>Members:</h2>
-                    <ul className="dashboard-member-list">
-                        {project.members?.map((member: string, index: number) => (
-                            <li key={index}>{member}</li>
-                        ))}
-                    </ul>
-                </div>
-            </main>
-            <div className="task-list" id="taskList">
-                <div className="task" draggable="true">
-                    <div className="innerTask">Task 1</div>
-                </div>
-                <div className="task" draggable="true">Task 2</div>
-                <div className="task" draggable="true">Task 3</div>
-                <div className="task" draggable="true">Task 4</div>
-                <div className="task" draggable="true">Task 5</div>
-                <div className="task" draggable="true">Task 6</div>
-                <div className="task" draggable="true">Task 7</div>
-                <div className="task" draggable="true">Task 8</div>
+        <>
+            <div>
+                <h1>{project?.name || "Loading..."}</h1>
             </div>
-        </div>
+            <div className="task-container">
+                <div className="taskprompt">
+                    <input
+                        type="text"
+                        placeholder="Add a new task"
+                        className="task-input"
+                        value= {newTask}
+                        onChange= {(e)=>setNewTask(e.target.value)}
+                    />
+                    <button className="add-task-button" onClick={handleAddTask}>Add Task</button>
+                </div>
+            </div>
+            <div className="task-table-container">
+                 <table className="task-table">
+                  {drawTable(taskListdata)}
+                </table>
+              </div>
+        </>
     );
 }

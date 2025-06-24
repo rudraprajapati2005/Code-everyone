@@ -4,21 +4,123 @@
     color : rgb(16, 9, 9);
     margin : 2rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    border-radius: 1rem;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+.new-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px; /* spacing between tasks */
 }
 
 .task{
-    background-color: sandybrown;
+    background-color: rgb(244, 164, 95);
     color:white;
     padding: 1rem;
     font-family: Tahoma;
     font-weight: 700;
     margin : 1rem;
     cursor: grab;
-  user-select: none;
+    user-select: none;
 }
 
 
 .task:active {
   cursor: grabbing;
+}
+.task-input{
+  width:  calc(100% - 2rem);
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #055de1;
+  border-radius: 6px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  background-color: #f8fafc;
+  transition: border 0.2s;
+  margin:1rem
+}
+
+.add-task-button {
+  background: orange;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.3rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  margin-left:1rem;
+}
+
+.task-list{
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  background-color: #d1d5db;
+  width: calc(100% - 2rem);
+  color: rgb(16, 9, 9);
+  margin: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.task-list::-webkit-scrollbar {
+  background-color: rgb(255, 255, 255);
+  border-radius: inherit;
+  height: 8px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+    background: #413939;
+    margin: 0 20px;
+    border-radius: 4px;
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+  background: #000000;
+}
+
+.task-table-container {
+  margin-top: 1rem;
+}
+.task-table {
+  width: calc(100% - 2rem);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  margin : 1rem;
+  background-color: #f8fafc;
+  border-radius: 1rem;
+  padding :5px;
+   border-collapse: separate;
+  border-spacing: 10px; /* adds 10px space between cells */
+
+}
+.task-table::-webkit-scrollbar{
+  background-color: rgb(255, 255, 255);
+  border-radius: inherit;
+  height: 8px;
+}
+.task-table::-webkit-scrollbar-thumb {
+  background: #413939;
+  margin: 0 20px;
+  border-radius: 4px;
+}
+.task-table::-webkit-scrollbar-thumb:hover {
+  background: #000000;
+}
+.task-table th, .task-table td {
+  background-color: orange;
+  margin : 1rem;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  
+}
+
+.task-table th {
+  background: #f3f3f3;
 }
